@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using BPMN;
 
 namespace ReferenceVsValue
 {
@@ -11,14 +12,32 @@ namespace ReferenceVsValue
     {
         static void Main(string[] args)
         {
-            var recList = ReturnRecList();
-            var query = (from rec in recList
-                         select rec).ToList();
+            var model = Model.Read(@"C:\Users\Fabian\Desktop\Coding Projects\BPMNSharp\Diagram\diagram.bpmn");
 
-            var equal = recList == query;
+            for (int h = 0; h < model.Diagrams.Count; h++)
+            {
+                var dia = model.Diagrams[h];
 
-            DisplayRecList(true, query);
-            DisplayRecList(false, recList);
+                for (int m = 0; m < dia.Planes.Count; m++)
+                {
+                    var plane = dia.Planes[m];
+
+                    for (int i = 0; i < plane.Shapes.Count; i++)
+                    {
+                        var currentShape = plane.Shapes[i];
+
+                        for (int j = 0; j < currentShape.Bounds.Count; j++)
+                        {
+                            var tempRec = currentShape.Bounds[j];
+                            tempRec.X = 15;
+                            currentShape.Bounds[j] = tempRec;
+                        }
+                    }
+                }
+            }
+
+            //DisplayRecList(recList);
+
 
             Console.ReadLine();
         }
@@ -34,37 +53,20 @@ namespace ReferenceVsValue
             return recList;
         }
 
-        public static void DisplayRecList(bool offset, List<Rectangle> recList)
+        public static void DisplayRecList(List<Rectangle> recList)
         {
             for (int i = 0; i < recList.Count; i++)
             {
                 var tempRec = recList[i];
-                var compHashes = tempRec.GetHashCode() == recList[i].GetHashCode();
 
                 Console.WriteLine($"List-Hash: {recList.GetHashCode()}");
 
                 Console.WriteLine($"Rec {i} (old): {recList[i].ToString()}\tHash: {recList[i].GetHashCode()}");
 
-                if (offset)
-                    tempRec.Offset(10, 1);
-
-                compHashes = tempRec.GetHashCode() == recList[i].GetHashCode();
-
                 recList[i] = tempRec;
-                compHashes = tempRec.GetHashCode() == recList[i].GetHashCode();
-
+            
                 Console.WriteLine($"Rec {i} (new): {recList[i].ToString()}\tHash: {recList[i].GetHashCode()}\n");
             }
         }
-    }
-
-    public class Plane
-    {
-        public List<Shape> Shapes { get; set; }
-    }
-
-    public class Shape
-    {
-        public List<Rectangle> Bounds { get; set; }
     }
 }
