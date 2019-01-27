@@ -43,9 +43,27 @@ namespace ReferenceVsValue
                             currentShape.Bounds[j] = tempRec;
                         }
                     }
+
+                    for (int i = 0; i < plane.Edges.Count; i++)
+                    {
+                        var currentEdge = plane.Edges[i];
+
+                        for (int j = 0; j < currentEdge.Points.Count; j++)
+                        {
+                            var tempEdge = currentEdge.Points[j];
+                            tempEdge.X += moveX;
+                            tempEdge.Y += moveY;
+                            currentEdge.Points[j] = tempEdge;
+                        }
+                    }
                 }
             }
 
+            SaveAndOpenPicture(model);
+        }
+
+        private static void SaveAndOpenPicture(Model model)
+        {
             Image img = model.GetImage(0, 2.0f);
             img.Save("diaNew.png", ImageFormat.Png);
 
@@ -59,8 +77,6 @@ namespace ReferenceVsValue
             };
 
             Process.Start(startInfo);
-
-            Console.ReadLine();
         }
 
         public static int ReturnMinValue(Model model, Coordinate coordinate)
@@ -96,33 +112,6 @@ namespace ReferenceVsValue
         {
             X = 1,
             Y = 2
-        }
-
-        public static List<Rectangle> ReturnRecList()
-        {
-            var rec1 = new Rectangle() { X = 100, Y = 200 };
-            var rec2 = new Rectangle() { X = 999, Y = 333 };
-            List<Rectangle> recList = new List<Rectangle>();
-            recList.Add(rec1);
-            recList.Add(rec2);
-
-            return recList;
-        }
-
-        public static void DisplayRecList(List<Rectangle> recList)
-        {
-            for (int i = 0; i < recList.Count; i++)
-            {
-                var tempRec = recList[i];
-
-                Console.WriteLine($"List-Hash: {recList.GetHashCode()}");
-
-                Console.WriteLine($"Rec {i} (old): {recList[i].ToString()}\tHash: {recList[i].GetHashCode()}");
-
-                recList[i] = tempRec;
-
-                Console.WriteLine($"Rec {i} (new): {recList[i].ToString()}\tHash: {recList[i].GetHashCode()}\n");
-            }
         }
     }
 }
