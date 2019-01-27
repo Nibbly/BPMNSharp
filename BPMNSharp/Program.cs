@@ -15,7 +15,7 @@ namespace ReferenceVsValue
     {
         static void Main(string[] args)
         {
-            var model = Model.Read(@"C:\Users\Fabian\Desktop\Coding Projects\BPMNSharp\Diagram\diagram.bpmn");
+            var model = Model.Read(@"");
 
             var minX = ReturnMinValue(model, Coordinate.X);
             var minY = ReturnMinValue(model, Coordinate.Y);
@@ -67,7 +67,7 @@ namespace ReferenceVsValue
             Image img = model.GetImage(0, 2.0f);
             img.Save("diaNew.png", ImageFormat.Png);
 
-            var filePath = @"C:\Users\Fabian\Desktop\Coding Projects\BPMNSharp\BPMNSharp\bin\Debug";
+            var filePath = @"";
             bool pathOk = File.Exists(filePath);
 
             ProcessStartInfo startInfo = new ProcessStartInfo
